@@ -54,14 +54,14 @@ function RowPost(props) {
 
   return (
     <div className="row">
-      <h2>{props.title}</h2>
+      <h3>{props.title}</h3>
       <div className="posters">
         {movie.map((movies) => (
           <img
             onClick={() => handleMovie(movies.id)}
             key={movies.id}
             className= "poster"
-            src={imageUrl + movies.poster_path} 
+            src={imageUrl + movies.backdrop_path} 
             alt="Poster"
           />
         ))}
