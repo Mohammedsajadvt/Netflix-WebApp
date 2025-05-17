@@ -1,28 +1,15 @@
-import NavBar from "./components/NavBar/NavBar";
-import Banner from "./Components/Banner/Banner";
-import RowPost from "./Components/RowPost/RowPost";
+import Home from "./pages/Home/Home";
 import "./App.css";
-import {
-  originals,
-  action,
-  comedy,
-  trending,
-  romance,
-  documentaries,
-} from "./urls";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 function App() {
-  return (
-    <div>
-      <NavBar/>
-      <Banner/>
-      <RowPost url={originals} title="Netflix Originals"  isFirstRow={true}/>
-      <RowPost url={action} title="Action" />
-      <RowPost url={comedy} title="Comedy Movies" />
-      <RowPost url={trending} title="Trending" />
-      <RowPost url={romance} title="Romace Movies" />
-      <RowPost url={documentaries} title="Documentaries" />
-    </div>
+  const router =  createBrowserRouter(
+    [
+      {
+        path:'/',element:<Home/>
+      },
+    ]
   );
+  return <RouterProvider router={router}/>;
 }
 
 export default App;

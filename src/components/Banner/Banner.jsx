@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from "react";
 import "./Banner.css";
-import axios from "../../axios";
 import Modal from "react-modal";
 import YouTube from "react-youtube";
-import { API_KEY, imageUrl } from "../../constants/Constants";
+import { imageUrl } from "../../constants/Constants";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchTrendingMovie,
+  fetchMovieVideo,
+  clearMovieVideo,
+} from "../../redux/slices/movieSlice";
 
 Modal.setAppElement("#root");
 
 function Banner() {
-  const [movie, setMovie] = useState();
-const [urlId, setUrlId] = useState("");
-const [isModalOpen, setIsModalOpen] = useState(false);
- const opts = {
+  const dispatch = useDispatch();
+  const bannerMovie = useSelector((state) => state.movies.bannerMovie);
+  const movieVideo = useSelector((state) => state.movies.movieVideo);
+  const loading = useSelector((state)=>state.movies.loading);
+  const error = useSelector((state)=>state.movies.error);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [fallback, setFallback] = useState(false);
+
+  const opts = {
     height: "390",
     width: "100%",
     playerVars: {
@@ -19,57 +29,56 @@ const [isModalOpen, setIsModalOpen] = useState(false);
     },
   };
   useEffect(() => {
-    axios
-      .get(`trending/all/week?api_key=${API_KEY}&language=en-US`)
-      .then((response) => {
-        const movies = response.data.results;
-        if (movies && movies.length > 0) {
-          const randomIndex = Math.floor(Math.random() * movies.length);
-          setMovie(movies[randomIndex]);
-        }
-      })
-      .catch((error) => {
-         alert("Error fetching data:", error);
-      });
-  }, []);
-    const handleMovie = (id) => {
-    axios
-      .get(`/movie/${id}/videos?api_key=${API_KEY}&language=en-US`)
-      .then((response) => {
-        if (response.data.results.length !== 0) {
-          setUrlId(response.data.results[0]);
-                  setIsModalOpen(true);
-        } else {
-          alert('No video available');
-        }
-      })
-      .catch((error) => {
-        alert(error);
-      });
+    dispatch(fetchTrendingMovie());
+  }, [dispatch]);
+  const handleMovie = (id) => {
+    dispatch(fetchMovieVideo(id));
+    setIsModalOpen(true);
+    setFallback(false);
   };
-   const closeModal = () => {
+   useEffect(() => {
+    if (isModalOpen && !loading) {
+      if (!movieVideo && error) {
+        setFallback(true); 
+      }
+    }
+  }, [movieVideo, isModalOpen,loading,error]);
+  const closeModal = () => {
     setIsModalOpen(false);
-    setUrlId('');
+    dispatch(clearMovieVideo());
+    setFallback(false);
   };
+
   return (
     <div
       className="banner"
       style={{
-        backgroundImage: `url(${movie ? imageUrl + movie.backdrop_path : ""})`,
+        backgroundImage: `url(${
+          bannerMovie ? imageUrl + bannerMovie.backdrop_path : ""
+        })`,
       }}
     >
       <div className="content">
-        <h1 className="title">{movie ? movie.title || movie.name : ""}</h1>
+        <h1 className="title">
+          {bannerMovie ? bannerMovie.title || bannerMovie.name : ""}
+        </h1>
         <div className="banner_buttons">
           {
-            <button className="button" onClick={()=>handleMovie(movie.id)}>Play</button>
+            <button
+              className="button"
+              onClick={() => handleMovie(bannerMovie.id)}
+            >
+              Play
+            </button>
           }
           <button className="button">My list</button>
         </div>
-        <h1 className="description">{movie ? movie.overview : ""}</h1>
+        <h1 className="description">
+          {bannerMovie ? bannerMovie.overview : ""}
+        </h1>
       </div>
       <div className="fade_bottom"></div>
-      <Modal
+       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="Trailer"
@@ -79,8 +88,15 @@ const [isModalOpen, setIsModalOpen] = useState(false);
         <button className="close-button" onClick={closeModal}>
           X
         </button>
-        {urlId && <YouTube videoId={urlId.key} opts={opts} />}
-      </Modal>{" "}
+
+        {fallback ? (
+          <YouTube videoId="GV3HUDMQ-F8" opts={opts} />
+        ) : movieVideo ? (
+          <YouTube videoId={movieVideo.key} opts={opts} />
+        ) : (
+          <p>Loading...</p>
+        )}
+      </Modal>
     </div>
   );
 }
