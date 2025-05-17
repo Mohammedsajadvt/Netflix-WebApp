@@ -6,6 +6,7 @@ import YouTube from "react-youtube";
 import { API_KEY, imageUrl } from "../../constants/Constants";
 
 Modal.setAppElement("#root");
+
 function Banner() {
   const [movie, setMovie] = useState();
 const [urlId, setUrlId] = useState("");

@@ -16,5 +16,10 @@ width: 80px;
     padding: 20px;
     display: flex;
     justify-content: space-between;
-    background-color: rgba(17, 17, 17, 0.6);;
+    transition: background-color 0.3s ease;
+    background-color:transparent;
+    z-index: 100;
+}
+.navbar.scrolled{
+background-color: #111;
 }

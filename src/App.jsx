@@ -1,7 +1,7 @@
 import NavBar from "./components/NavBar/NavBar";
+import Banner from "./Components/Banner/Banner";
+import RowPost from "./Components/RowPost/RowPost";
 import "./App.css";
-import Banner from "./components/Banner/Banner";
-import RowPost from "./components/RowPost/RowPost";
 import {
   originals,
   action,
@@ -13,9 +13,9 @@ import {
 function App() {
   return (
     <div>
-      <NavBar />
-      <Banner />
-      <RowPost url={originals} title="Netflix Originals" />
+      <NavBar/>
+      <Banner/>
+      <RowPost url={originals} title="Netflix Originals"  isFirstRow={true}/>
       <RowPost url={action} title="Action" />
       <RowPost url={comedy} title="Comedy Movies" />
       <RowPost url={trending} title="Trending" />

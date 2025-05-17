@@ -36,9 +36,9 @@ function RowPost(props) {
       .then((response) => {
         if (response.data.results.length !== 0) {
           setUrlId(response.data.results[0]);
-                  setIsModalOpen(true);
+          setIsModalOpen(true);
         } else {
-          alert('No video available');
+          alert("No video available");
         }
       })
       .catch((error) => {
@@ -46,24 +46,27 @@ function RowPost(props) {
       });
   };
 
-   const closeModal = () => {
+  const closeModal = () => {
     setIsModalOpen(false);
-    setUrlId('');
+    setUrlId("");
   };
 
-
   return (
-    <div className="row">
+    <div className={`row ${props.isFirstRow ? "first-row-overlay" : "row"}`}>
       <h3>{props.title}</h3>
       <div className="posters">
         {movie.map((movies) => (
-          <img
-            onClick={() => handleMovie(movies.id)}
-            key={movies.id}
-            className= "poster"
-            src={imageUrl + movies.backdrop_path} 
-            alt="Poster"
-          />
+          <div key={movies.id} className="poster-container">
+            <img
+              onClick={() => handleMovie(movies.id)}
+              className="poster"
+              src={movies.backdrop_path?imageUrl + movies.backdrop_path : "https://images.ctfassets.net/y2ske730sjqp/5QQ9SVIdc1tmkqrtFnG9U1/de758bba0f65dcc1c6bc1f31f161003d/BrandAssets_Logos_02-NSymbol.jpg?w=940"}
+              alt="Poster"
+            />
+            <div className="poster-title">
+              {movies.title || movies.name || movies.original_title}
+            </div>
+          </div>
         ))}
       </div>
       <Modal
