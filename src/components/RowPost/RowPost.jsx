@@ -20,8 +20,8 @@ Modal.setAppElement("#root");
 
 function RowPost({ title, type, isFirstRow }) {
   const dispatch = useDispatch();
-  const loading = useSelector((state)=>state.movies.loading);
-  const error = useSelector((state)=>state.movies.error);
+  const loading = useSelector((state) => state.movies.loading);
+  const error = useSelector((state) => state.movies.error);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fallback, setFallback] = useState(false);
 
@@ -83,12 +83,12 @@ function RowPost({ title, type, isFirstRow }) {
   };
 
   useEffect(() => {
-      if (isModalOpen && !loading) {
-        if (!movieVideo && error) {
-          setFallback(true); 
-        }
+    if (isModalOpen && !loading) {
+      if (!movieVideo && error) {
+        setFallback(true);
       }
-    }, [movieVideo,isModalOpen,loading,error]);
+    }
+  }, [movieVideo, isModalOpen, loading, error]);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -128,7 +128,7 @@ function RowPost({ title, type, isFirstRow }) {
           ))}
       </div>
 
-       <Modal
+      <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="Trailer"
